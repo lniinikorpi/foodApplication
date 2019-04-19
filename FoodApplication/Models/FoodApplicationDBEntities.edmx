@@ -1,0 +1,567 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="FoodApplicationDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Allergens">
+          <Key>
+            <PropertyRef Name="AllergenID" />
+          </Key>
+          <Property Name="AllergenID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AllergenName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FavouriteMenus">
+          <Key>
+            <PropertyRef Name="FavouriteID" />
+          </Key>
+          <Property Name="FavouriteID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MenuID" Type="int" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FoodAllergenPairs">
+          <Key>
+            <PropertyRef Name="PairID" />
+          </Key>
+          <Property Name="PairID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AllergenID" Type="int" Nullable="false" />
+          <Property Name="FoodID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FoodOfaDay">
+          <Key>
+            <PropertyRef Name="DayFoodID" />
+          </Key>
+          <Property Name="DayFoodID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FoodID" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="MenuID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Foods">
+          <Key>
+            <PropertyRef Name="FoodID" />
+          </Key>
+          <Property Name="FoodID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FoodName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TypeID" Type="int" Nullable="false" />
+          <Property Name="Recepy" Type="nvarchar" MaxLength="50" />
+          <Property Name="Picture" Type="image" />
+        </EntityType>
+        <EntityType Name="FoodTypes">
+          <Key>
+            <PropertyRef Name="TypeID" />
+          </Key>
+          <Property Name="TypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TypeName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WeekMenus">
+          <Key>
+            <PropertyRef Name="MenuID" />
+          </Key>
+          <Property Name="MenuID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_FavouriteMenus_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="FavouriteMenus" Type="Self.FavouriteMenus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="FavouriteMenus">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FavouriteMenus_WeekMenus">
+          <End Role="WeekMenus" Type="Self.WeekMenus" Multiplicity="1" />
+          <End Role="FavouriteMenus" Type="Self.FavouriteMenus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WeekMenus">
+              <PropertyRef Name="MenuID" />
+            </Principal>
+            <Dependent Role="FavouriteMenus">
+              <PropertyRef Name="MenuID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FoodAllergenPairs_Allergens">
+          <End Role="Allergens" Type="Self.Allergens" Multiplicity="1" />
+          <End Role="FoodAllergenPairs" Type="Self.FoodAllergenPairs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Allergens">
+              <PropertyRef Name="AllergenID" />
+            </Principal>
+            <Dependent Role="FoodAllergenPairs">
+              <PropertyRef Name="AllergenID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FoodAllergenPairs_Foods">
+          <End Role="Foods" Type="Self.Foods" Multiplicity="1" />
+          <End Role="FoodAllergenPairs" Type="Self.FoodAllergenPairs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Foods">
+              <PropertyRef Name="FoodID" />
+            </Principal>
+            <Dependent Role="FoodAllergenPairs">
+              <PropertyRef Name="FoodID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FoodOfaDay_Foods">
+          <End Role="WeekMenus" Type="Self.WeekMenus" Multiplicity="1" />
+          <End Role="FoodOfaDay" Type="Self.FoodOfaDay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WeekMenus">
+              <PropertyRef Name="MenuID" />
+            </Principal>
+            <Dependent Role="FoodOfaDay">
+              <PropertyRef Name="MenuID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FoodOfaDay_Foods1">
+          <End Role="Foods" Type="Self.Foods" Multiplicity="1" />
+          <End Role="FoodOfaDay" Type="Self.FoodOfaDay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Foods">
+              <PropertyRef Name="FoodID" />
+            </Principal>
+            <Dependent Role="FoodOfaDay">
+              <PropertyRef Name="FoodID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Foods_FoodTypes">
+          <End Role="FoodTypes" Type="Self.FoodTypes" Multiplicity="1" />
+          <End Role="Foods" Type="Self.Foods" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FoodTypes">
+              <PropertyRef Name="TypeID" />
+            </Principal>
+            <Dependent Role="Foods">
+              <PropertyRef Name="TypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WeekMenus_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="WeekMenus" Type="Self.WeekMenus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="WeekMenus">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FoodApplicationDBModelStoreContainer">
+          <EntitySet Name="Allergens" EntityType="Self.Allergens" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FavouriteMenus" EntityType="Self.FavouriteMenus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FoodAllergenPairs" EntityType="Self.FoodAllergenPairs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FoodOfaDay" EntityType="Self.FoodOfaDay" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Foods" EntityType="Self.Foods" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FoodTypes" EntityType="Self.FoodTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WeekMenus" EntityType="Self.WeekMenus" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_FavouriteMenus_Users" Association="Self.FK_FavouriteMenus_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="FavouriteMenus" EntitySet="FavouriteMenus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FavouriteMenus_WeekMenus" Association="Self.FK_FavouriteMenus_WeekMenus">
+            <End Role="WeekMenus" EntitySet="WeekMenus" />
+            <End Role="FavouriteMenus" EntitySet="FavouriteMenus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FoodAllergenPairs_Allergens" Association="Self.FK_FoodAllergenPairs_Allergens">
+            <End Role="Allergens" EntitySet="Allergens" />
+            <End Role="FoodAllergenPairs" EntitySet="FoodAllergenPairs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FoodAllergenPairs_Foods" Association="Self.FK_FoodAllergenPairs_Foods">
+            <End Role="Foods" EntitySet="Foods" />
+            <End Role="FoodAllergenPairs" EntitySet="FoodAllergenPairs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FoodOfaDay_Foods" Association="Self.FK_FoodOfaDay_Foods">
+            <End Role="WeekMenus" EntitySet="WeekMenus" />
+            <End Role="FoodOfaDay" EntitySet="FoodOfaDay" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FoodOfaDay_Foods1" Association="Self.FK_FoodOfaDay_Foods1">
+            <End Role="Foods" EntitySet="Foods" />
+            <End Role="FoodOfaDay" EntitySet="FoodOfaDay" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Foods_FoodTypes" Association="Self.FK_Foods_FoodTypes">
+            <End Role="FoodTypes" EntitySet="FoodTypes" />
+            <End Role="Foods" EntitySet="Foods" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WeekMenus_Users" Association="Self.FK_WeekMenus_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="WeekMenus" EntitySet="WeekMenus" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FoodApplicationDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Allergens">
+          <Key>
+            <PropertyRef Name="AllergenID" />
+          </Key>
+          <Property Name="AllergenID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AllergenName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="FoodAllergenPairs" Relationship="Self.FK_FoodAllergenPairs_Allergens" FromRole="Allergens" ToRole="FoodAllergenPairs" />
+        </EntityType>
+        <EntityType Name="FavouriteMenus">
+          <Key>
+            <PropertyRef Name="FavouriteID" />
+          </Key>
+          <Property Name="FavouriteID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MenuID" Type="Int32" Nullable="false" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_FavouriteMenus_Users" FromRole="FavouriteMenus" ToRole="Users" />
+          <NavigationProperty Name="WeekMenus" Relationship="Self.FK_FavouriteMenus_WeekMenus" FromRole="FavouriteMenus" ToRole="WeekMenus" />
+        </EntityType>
+        <EntityType Name="FoodAllergenPairs">
+          <Key>
+            <PropertyRef Name="PairID" />
+          </Key>
+          <Property Name="PairID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AllergenID" Type="Int32" Nullable="false" />
+          <Property Name="FoodID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Allergens" Relationship="Self.FK_FoodAllergenPairs_Allergens" FromRole="FoodAllergenPairs" ToRole="Allergens" />
+          <NavigationProperty Name="Foods" Relationship="Self.FK_FoodAllergenPairs_Foods" FromRole="FoodAllergenPairs" ToRole="Foods" />
+        </EntityType>
+        <EntityType Name="FoodOfaDay">
+          <Key>
+            <PropertyRef Name="DayFoodID" />
+          </Key>
+          <Property Name="DayFoodID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FoodID" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="MenuID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="WeekMenus" Relationship="Self.FK_FoodOfaDay_Foods" FromRole="FoodOfaDay" ToRole="WeekMenus" />
+          <NavigationProperty Name="Foods" Relationship="Self.FK_FoodOfaDay_Foods1" FromRole="FoodOfaDay" ToRole="Foods" />
+        </EntityType>
+        <EntityType Name="Foods">
+          <Key>
+            <PropertyRef Name="FoodID" />
+          </Key>
+          <Property Name="FoodID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FoodName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TypeID" Type="Int32" Nullable="false" />
+          <Property Name="Recepy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Picture" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="FoodAllergenPairs" Relationship="Self.FK_FoodAllergenPairs_Foods" FromRole="Foods" ToRole="FoodAllergenPairs" />
+          <NavigationProperty Name="FoodOfaDay" Relationship="Self.FK_FoodOfaDay_Foods1" FromRole="Foods" ToRole="FoodOfaDay" />
+          <NavigationProperty Name="FoodTypes" Relationship="Self.FK_Foods_FoodTypes" FromRole="Foods" ToRole="FoodTypes" />
+        </EntityType>
+        <EntityType Name="FoodTypes">
+          <Key>
+            <PropertyRef Name="TypeID" />
+          </Key>
+          <Property Name="TypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Foods" Relationship="Self.FK_Foods_FoodTypes" FromRole="FoodTypes" ToRole="Foods" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="FavouriteMenus" Relationship="Self.FK_FavouriteMenus_Users" FromRole="Users" ToRole="FavouriteMenus" />
+          <NavigationProperty Name="WeekMenus" Relationship="Self.FK_WeekMenus_Users" FromRole="Users" ToRole="WeekMenus" />
+        </EntityType>
+        <EntityType Name="WeekMenus">
+          <Key>
+            <PropertyRef Name="MenuID" />
+          </Key>
+          <Property Name="MenuID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="FavouriteMenus" Relationship="Self.FK_FavouriteMenus_WeekMenus" FromRole="WeekMenus" ToRole="FavouriteMenus" />
+          <NavigationProperty Name="FoodOfaDay" Relationship="Self.FK_FoodOfaDay_Foods" FromRole="WeekMenus" ToRole="FoodOfaDay" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_WeekMenus_Users" FromRole="WeekMenus" ToRole="Users" />
+        </EntityType>
+        <Association Name="FK_FoodAllergenPairs_Allergens">
+          <End Role="Allergens" Type="Self.Allergens" Multiplicity="1" />
+          <End Role="FoodAllergenPairs" Type="Self.FoodAllergenPairs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Allergens">
+              <PropertyRef Name="AllergenID" />
+            </Principal>
+            <Dependent Role="FoodAllergenPairs">
+              <PropertyRef Name="AllergenID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FavouriteMenus_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="FavouriteMenus" Type="Self.FavouriteMenus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="FavouriteMenus">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FavouriteMenus_WeekMenus">
+          <End Role="WeekMenus" Type="Self.WeekMenus" Multiplicity="1" />
+          <End Role="FavouriteMenus" Type="Self.FavouriteMenus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WeekMenus">
+              <PropertyRef Name="MenuID" />
+            </Principal>
+            <Dependent Role="FavouriteMenus">
+              <PropertyRef Name="MenuID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FoodAllergenPairs_Foods">
+          <End Role="Foods" Type="Self.Foods" Multiplicity="1" />
+          <End Role="FoodAllergenPairs" Type="Self.FoodAllergenPairs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Foods">
+              <PropertyRef Name="FoodID" />
+            </Principal>
+            <Dependent Role="FoodAllergenPairs">
+              <PropertyRef Name="FoodID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FoodOfaDay_Foods">
+          <End Role="WeekMenus" Type="Self.WeekMenus" Multiplicity="1" />
+          <End Role="FoodOfaDay" Type="Self.FoodOfaDay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WeekMenus">
+              <PropertyRef Name="MenuID" />
+            </Principal>
+            <Dependent Role="FoodOfaDay">
+              <PropertyRef Name="MenuID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FoodOfaDay_Foods1">
+          <End Role="Foods" Type="Self.Foods" Multiplicity="1" />
+          <End Role="FoodOfaDay" Type="Self.FoodOfaDay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Foods">
+              <PropertyRef Name="FoodID" />
+            </Principal>
+            <Dependent Role="FoodOfaDay">
+              <PropertyRef Name="FoodID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Foods_FoodTypes">
+          <End Role="FoodTypes" Type="Self.FoodTypes" Multiplicity="1" />
+          <End Role="Foods" Type="Self.Foods" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FoodTypes">
+              <PropertyRef Name="TypeID" />
+            </Principal>
+            <Dependent Role="Foods">
+              <PropertyRef Name="TypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WeekMenus_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="WeekMenus" Type="Self.WeekMenus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="WeekMenus">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FoodApplicationDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Allergens" EntityType="Self.Allergens" />
+          <EntitySet Name="FavouriteMenus" EntityType="Self.FavouriteMenus" />
+          <EntitySet Name="FoodAllergenPairs" EntityType="Self.FoodAllergenPairs" />
+          <EntitySet Name="FoodOfaDay" EntityType="Self.FoodOfaDay" />
+          <EntitySet Name="Foods" EntityType="Self.Foods" />
+          <EntitySet Name="FoodTypes" EntityType="Self.FoodTypes" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="Users" EntityType="Self.Users" />
+          <EntitySet Name="WeekMenus" EntityType="Self.WeekMenus" />
+          <AssociationSet Name="FK_FoodAllergenPairs_Allergens" Association="Self.FK_FoodAllergenPairs_Allergens">
+            <End Role="Allergens" EntitySet="Allergens" />
+            <End Role="FoodAllergenPairs" EntitySet="FoodAllergenPairs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FavouriteMenus_Users" Association="Self.FK_FavouriteMenus_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="FavouriteMenus" EntitySet="FavouriteMenus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FavouriteMenus_WeekMenus" Association="Self.FK_FavouriteMenus_WeekMenus">
+            <End Role="WeekMenus" EntitySet="WeekMenus" />
+            <End Role="FavouriteMenus" EntitySet="FavouriteMenus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FoodAllergenPairs_Foods" Association="Self.FK_FoodAllergenPairs_Foods">
+            <End Role="Foods" EntitySet="Foods" />
+            <End Role="FoodAllergenPairs" EntitySet="FoodAllergenPairs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FoodOfaDay_Foods" Association="Self.FK_FoodOfaDay_Foods">
+            <End Role="WeekMenus" EntitySet="WeekMenus" />
+            <End Role="FoodOfaDay" EntitySet="FoodOfaDay" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FoodOfaDay_Foods1" Association="Self.FK_FoodOfaDay_Foods1">
+            <End Role="Foods" EntitySet="Foods" />
+            <End Role="FoodOfaDay" EntitySet="FoodOfaDay" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Foods_FoodTypes" Association="Self.FK_Foods_FoodTypes">
+            <End Role="FoodTypes" EntitySet="FoodTypes" />
+            <End Role="Foods" EntitySet="Foods" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WeekMenus_Users" Association="Self.FK_WeekMenus_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="WeekMenus" EntitySet="WeekMenus" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="FoodApplicationDBModelStoreContainer" CdmEntityContainer="FoodApplicationDBEntities">
+          <EntitySetMapping Name="Allergens">
+            <EntityTypeMapping TypeName="FoodApplicationDBModel.Allergens">
+              <MappingFragment StoreEntitySet="Allergens">
+                <ScalarProperty Name="AllergenID" ColumnName="AllergenID" />
+                <ScalarProperty Name="AllergenName" ColumnName="AllergenName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FavouriteMenus">
+            <EntityTypeMapping TypeName="FoodApplicationDBModel.FavouriteMenus">
+              <MappingFragment StoreEntitySet="FavouriteMenus">
+                <ScalarProperty Name="FavouriteID" ColumnName="FavouriteID" />
+                <ScalarProperty Name="MenuID" ColumnName="MenuID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FoodAllergenPairs">
+            <EntityTypeMapping TypeName="FoodApplicationDBModel.FoodAllergenPairs">
+              <MappingFragment StoreEntitySet="FoodAllergenPairs">
+                <ScalarProperty Name="PairID" ColumnName="PairID" />
+                <ScalarProperty Name="AllergenID" ColumnName="AllergenID" />
+                <ScalarProperty Name="FoodID" ColumnName="FoodID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FoodOfaDay">
+            <EntityTypeMapping TypeName="FoodApplicationDBModel.FoodOfaDay">
+              <MappingFragment StoreEntitySet="FoodOfaDay">
+                <ScalarProperty Name="DayFoodID" ColumnName="DayFoodID" />
+                <ScalarProperty Name="FoodID" ColumnName="FoodID" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="MenuID" ColumnName="MenuID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Foods">
+            <EntityTypeMapping TypeName="FoodApplicationDBModel.Foods">
+              <MappingFragment StoreEntitySet="Foods">
+                <ScalarProperty Name="FoodID" ColumnName="FoodID" />
+                <ScalarProperty Name="FoodName" ColumnName="FoodName" />
+                <ScalarProperty Name="TypeID" ColumnName="TypeID" />
+                <ScalarProperty Name="Recepy" ColumnName="Recepy" />
+                <ScalarProperty Name="Picture" ColumnName="Picture" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FoodTypes">
+            <EntityTypeMapping TypeName="FoodApplicationDBModel.FoodTypes">
+              <MappingFragment StoreEntitySet="FoodTypes">
+                <ScalarProperty Name="TypeID" ColumnName="TypeID" />
+                <ScalarProperty Name="TypeName" ColumnName="TypeName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="FoodApplicationDBModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="FoodApplicationDBModel.Users">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WeekMenus">
+            <EntityTypeMapping TypeName="FoodApplicationDBModel.WeekMenus">
+              <MappingFragment StoreEntitySet="WeekMenus">
+                <ScalarProperty Name="MenuID" ColumnName="MenuID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
