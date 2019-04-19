@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using FoodApplication.Models;
 
 namespace FoodApplication.Controllers
 {
@@ -10,7 +11,10 @@ namespace FoodApplication.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            FoodApplicationDBEntities entities = new FoodApplicationDBEntities();
+            List<Foods> model = entities.Foods.ToList();
+            entities.Dispose();
+            return View(model);
         }
 
         public ActionResult About()
