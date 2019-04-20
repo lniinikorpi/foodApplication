@@ -1,24 +1,32 @@
 ﻿@{
     ViewBag.Title = "Home Page";
+    DateTime date = new DateTime();
+    bool dateTaken = false;
 }
 
 <div class="jumbotron">
-    <table class= "table table-striped">
+    <table id = "contentTable" class= "table table-striped">
         <tbody>
-            @foreach (FoodApplication.Models.Foods food in Model)
-            {
-                <tr>
-                    <td>
-                        <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
-                            <div class="card-header">@food.FoodName</div>
-                            <div class="card-body">
-                                <h4 class="card-title">@food.TypeID</h4>
-                                <p class="card-text" > <a href = @food.Recepy>Resepti</a></p>
+                @foreach (FoodApplication.Models.FoodOfaDay weekFood in Model)
+                {
+                    if (dateTaken == false)
+                    {
+                        date = weekFood.Date;
+                        dateTaken = true;
+                    }
+                    
+                    <tr>
+                        <td>
+                            <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+                                <div class="card-header">@weekFood.Foods.FoodName</div>
+                                <div class="card-body">
+                                    <h4 class="card-title">@weekFood.Date</h4>
+                                    <p class="card-text">@* <a href=@food.Recepy>Resepti</a>*@</p>
+                                </div>
                             </div>
-                        </div>
-                    </td>
-                </tr>
-            }
+                        </td>
+                    </tr>
+                }
         </tbody>
     </table>
 </div>
