@@ -9,40 +9,85 @@ namespace FoodApplication.Controllers
 {
     public class HomeController : Controller
     {
-        public int userID;
+        FoodApplicationDBEntities entities = new FoodApplicationDBEntities();
+        public int userID = 1000;
         public ActionResult Index()
         {
-            FoodApplicationDBEntities entities = new FoodApplicationDBEntities();
+            List<WeekMenus> weekMenus = entities.WeekMenus.ToList();
+            List<FoodOfaDay> foodOfaDays = entities.FoodOfaDay.ToList();
+            var weekFoods = (from wf in foodOfaDays
+                            where wf.MenuID == userID
+                            orderby wf.Date
+                            select wf).ToList();
+            if (weekFoods.Count > 0)
+            {
+                return View(weekFoods);
+            }
+            else
+            {
+                return View();
+            }
+            
+        }
+
+        public ActionResult CreateFoods()
+        {
             List<Users> user = entities.Users.ToList();
-            userID = user[0].UserID;
+            //userID = user[0].UserID;
             List<Foods> foods = entities.Foods.ToList();
             List<FoodOfaDay> foodOfaDays = entities.FoodOfaDay.ToList();
-           /* List<WeekMenus> weekMenus = entities.WeekMenus.ToList();
+            List<WeekMenus> weekMenus = entities.WeekMenus.ToList();
+
+            var foodsToDelete = from wf in foodOfaDays
+                            where wf.MenuID == userID
+                            orderby wf.Date
+                            select wf;
+
+            foreach (FoodOfaDay food in foodsToDelete)
+            {
+                entities.FoodOfaDay.Remove(food);
+            }
 
             var breakfasts = (from bf in foods
-                             where bf.TypeID == 1003
-                             select bf).ToList();
-            
-            var lunches = (from l in foods
-                          where l.TypeID == 1004
-                          select l).ToList();
+                              where bf.TypeID == 1003
+                              select bf).ToList();
+
+             var lunches = (from l in foods
+                           where l.TypeID == 1004
+                           select l).ToList();
+             for (int i = 0; i < 7; i++)
+             {
+                 Random rnd = new Random();
+                 int index = rnd.Next(0, (breakfasts.Count()));
+                 var breakfast = breakfasts[index];
+                 FoodOfaDay newFood = new FoodOfaDay();
+                 newFood.FoodID = breakfast.FoodID;
+                 DateTime today = DateTime.Now;
+                 TimeSpan duration = new TimeSpan(i, 0, 0, 0);
+                 DateTime newDate = today.Add(duration);
+                 newFood.Date = newDate;
+                 newFood.MenuID = 1000;
+                 entities.FoodOfaDay.Add(newFood);
+                 entities.SaveChanges();
+
+             }
+             for (int i = 0; i < 7; i++)
+             {
+                 Random rnd = new Random();
+                 int index = rnd.Next(0, (lunches.Count()));
+                 var lunch = lunches[index];
+                 FoodOfaDay newFood = new FoodOfaDay();
+                 newFood.FoodID = lunch.FoodID;
+                 DateTime today = DateTime.Now;
+                 TimeSpan duration = new TimeSpan(i, 0, 0, 0);
+                 DateTime newDate = today.Add(duration);
+                 newFood.Date = newDate;
+                 newFood.MenuID = 1000;
+                 entities.FoodOfaDay.Add(newFood);
+                 entities.SaveChanges();
+
+             }
             for (int i = 0; i < 7; i++)
-            {
-                Random rnd = new Random();
-                int index = rnd.Next(0, (breakfasts.Count()));
-                var breakfast = breakfasts[index];
-                FoodOfaDay newFood = new FoodOfaDay();
-                newFood.FoodID = breakfast.FoodID;
-                DateTime today = DateTime.Now;
-                TimeSpan duration = new TimeSpan(i, 0, 0, 0);
-                DateTime newDate = today.Add(duration);
-                newFood.Date = newDate;
-                newFood.MenuID = 1000;
-                entities.FoodOfaDay.Add(newFood);
-                entities.SaveChanges();
-                
-            }
-            for (int i = 0; i < 14; i++)
             {
                 Random rnd = new Random();
                 int index = rnd.Next(0, (lunches.Count()));
@@ -59,24 +104,24 @@ namespace FoodApplication.Controllers
 
             }
             for (int i = 0; i < 7; i++)
-            {
-                Random rnd = new Random();
-                int index = rnd.Next(0, (breakfasts.Count()));
-                var breakfast = breakfasts[index];
-                FoodOfaDay newFood = new FoodOfaDay();
-                newFood.FoodID = breakfast.FoodID;
-                DateTime today = DateTime.Now;
-                TimeSpan duration = new TimeSpan(i, 0, 0, 0);
-                DateTime newDate = today.Add(duration);
-                newFood.Date = newDate;
-                newFood.MenuID = 1000;
-                entities.FoodOfaDay.Add(newFood);
-                entities.SaveChanges();
+             {
+                 Random rnd = new Random();
+                 int index = rnd.Next(0, (breakfasts.Count()));
+                 var breakfast = breakfasts[index];
+                 FoodOfaDay newFood = new FoodOfaDay();
+                 newFood.FoodID = breakfast.FoodID;
+                 DateTime today = DateTime.Now;
+                 TimeSpan duration = new TimeSpan(i, 0, 0, 0);
+                 DateTime newDate = today.Add(duration);
+                 newFood.Date = newDate;
+                 newFood.MenuID = 1000;
+                 entities.FoodOfaDay.Add(newFood);
+                 entities.SaveChanges();
 
-            }*/
+            }
 
             var weekFoods = from wf in foodOfaDays
-                            where wf.MenuID == 1000
+                            where wf.MenuID == userID
                             orderby wf.Date
                             select wf;
 

@@ -1,20 +1,16 @@
 ﻿@{
     ViewBag.Title = "Home Page";
-    DateTime date = new DateTime();
-    bool dateTaken = false;
+    
 }
 
-<div class="jumbotron">
-    <table id = "contentTable" class= "table table-striped">
-        <tbody>
+    <div class="jumbotron">
+        <div>
+            @Html.ActionLink("Generate Foods", "CreateFoods", "Home")
+        </div>
+        <table id="contentTable" class="table table-striped">
+            <tbody>
                 @foreach (FoodApplication.Models.FoodOfaDay weekFood in Model)
                 {
-                    if (dateTaken == false)
-                    {
-                        date = weekFood.Date;
-                        dateTaken = true;
-                    }
-                    
                     <tr>
                         <td>
                             <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
@@ -27,6 +23,7 @@
                         </td>
                     </tr>
                 }
-        </tbody>
-    </table>
-</div>
+            </tbody>
+        </table>
+
+    </div>
