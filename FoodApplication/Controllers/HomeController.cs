@@ -4,15 +4,28 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using FoodApplication.Models;
+using System.Data.SqlClient;
 
 namespace FoodApplication.Controllers
 {
     public class HomeController : Controller
     {
         FoodApplicationDBEntities entities = new FoodApplicationDBEntities();
-        public int userID = 1000;
+        public int userID;
+        public bool noFoods;
+        
+
         public ActionResult Index()
         {
+            try
+            {
+                userID = (int)(Session["UserID"]);
+            }
+            catch (Exception)
+            {
+
+                userID = 0;
+            }
             List<WeekMenus> weekMenus = entities.WeekMenus.ToList();
             List<FoodOfaDay> foodOfaDays = entities.FoodOfaDay.ToList();
             var weekFoods = (from wf in foodOfaDays
@@ -21,10 +34,14 @@ namespace FoodApplication.Controllers
                             select wf).ToList();
             if (weekFoods.Count > 0)
             {
+                noFoods = false;
+                Session["NoFoods"] = noFoods;
                 return View(weekFoods);
             }
             else
             {
+                noFoods = true;
+                Session["NoFoods"] = noFoods;
                 return View();
             }
             
@@ -32,20 +49,60 @@ namespace FoodApplication.Controllers
 
         public ActionResult CreateFoods()
         {
+            try
+            {
+                userID = (int)(Session["UserID"]);
+            }
+            catch (Exception)
+            {
+
+                userID = 0;
+            }
             List<Users> user = entities.Users.ToList();
-            //userID = user[0].UserID;
             List<Foods> foods = entities.Foods.ToList();
             List<FoodOfaDay> foodOfaDays = entities.FoodOfaDay.ToList();
             List<WeekMenus> weekMenus = entities.WeekMenus.ToList();
+            int userMenuID = new int();
+            foreach (WeekMenus wm in weekMenus)
+            {
+                if (wm.UserID == userID)
+                {
+                    userMenuID = wm.MenuID;
+                }
+            }
 
             var foodsToDelete = from wf in foodOfaDays
-                            where wf.MenuID == userID
+                            where wf.MenuID == userMenuID
                             orderby wf.Date
                             select wf;
-
-            foreach (FoodOfaDay food in foodsToDelete)
+            if (foodsToDelete.Count() == 0)
             {
-                entities.FoodOfaDay.Remove(food);
+                WeekMenus newWeekMenu = new WeekMenus();
+                newWeekMenu.UserID = userID;
+                /*String query = "INSERT INTO dbo.WeekMenus (UserID) VALUES (@UserID)";
+                SqlConnection conn = new SqlConnection();
+                SqlCommand command = new SqlCommand(query, conn);
+                command.Prepare();
+                command.Parameters.AddWithValue("@UserID", userID);
+                conn.Open();*/
+                //entities.WeekMenus.Add(newWeekMenu);
+                entities.SaveChanges();
+                foreach (WeekMenus wm in weekMenus)
+                {
+                    if (wm.UserID == userID)
+                    {
+                        userMenuID = wm.MenuID;
+                    }
+                }
+                
+            }
+
+            else
+            {
+                foreach (FoodOfaDay food in foodsToDelete)
+                {
+                    entities.FoodOfaDay.Remove(food);
+                }
             }
 
             var breakfasts = (from bf in foods
@@ -66,9 +123,14 @@ namespace FoodApplication.Controllers
                  TimeSpan duration = new TimeSpan(i, 0, 0, 0);
                  DateTime newDate = today.Add(duration);
                  newFood.Date = newDate;
-                 newFood.MenuID = 1000;
-                 entities.FoodOfaDay.Add(newFood);
-                 entities.SaveChanges();
+                newFood.MenuID = userMenuID;
+                entities.FoodOfaDay.Add(newFood);
+                /*String query = "INSERT INTO dbo.FoodOfaDay (FoodID, Date, MenuID) VALUES (@foodID, @date, @menuID)";
+                SqlCommand command = new SqlCommand(query);
+                command.Parameters.AddWithValue("@userID", userID);
+                command.Parameters.AddWithValue("@date", newDate);
+                command.Parameters.AddWithValue("@menuID", userMenuID);*/
+                entities.SaveChanges();
 
              }
              for (int i = 0; i < 7; i++)
@@ -82,9 +144,14 @@ namespace FoodApplication.Controllers
                  TimeSpan duration = new TimeSpan(i, 0, 0, 0);
                  DateTime newDate = today.Add(duration);
                  newFood.Date = newDate;
-                 newFood.MenuID = 1000;
-                 entities.FoodOfaDay.Add(newFood);
-                 entities.SaveChanges();
+                newFood.MenuID = userMenuID;
+                entities.FoodOfaDay.Add(newFood);
+                /*String query = "INSERT INTO dbo.FoodOfaDay (FoodID, Date, MenuID) VALUES (@foodID, @date, @menuID)";
+                SqlCommand command = new SqlCommand(query);
+                command.Parameters.AddWithValue("@userID", userID);
+                command.Parameters.AddWithValue("@date", newDate);
+                command.Parameters.AddWithValue("@menuID", userMenuID);*/
+                entities.SaveChanges();
 
              }
             for (int i = 0; i < 7; i++)
@@ -98,8 +165,13 @@ namespace FoodApplication.Controllers
                 TimeSpan duration = new TimeSpan(i, 0, 0, 0);
                 DateTime newDate = today.Add(duration);
                 newFood.Date = newDate;
-                newFood.MenuID = 1000;
+                newFood.MenuID = userMenuID;
                 entities.FoodOfaDay.Add(newFood);
+                /*String query = "INSERT INTO dbo.FoodOfaDay (FoodID, Date, MenuID) VALUES (@foodID, @date, @menuID)";
+                SqlCommand command = new SqlCommand(query);
+                command.Parameters.AddWithValue("@userID", userID);
+                command.Parameters.AddWithValue("@date", newDate);
+                command.Parameters.AddWithValue("@menuID", userMenuID);*/
                 entities.SaveChanges();
 
             }
@@ -110,13 +182,18 @@ namespace FoodApplication.Controllers
                  var breakfast = breakfasts[index];
                  FoodOfaDay newFood = new FoodOfaDay();
                  newFood.FoodID = breakfast.FoodID;
-                 DateTime today = DateTime.Now;
-                 TimeSpan duration = new TimeSpan(i, 0, 0, 0);
+                 DateTime today = DateTime.Now.Date;
+                TimeSpan duration = new TimeSpan(i, 0, 0, 0);
                  DateTime newDate = today.Add(duration);
                  newFood.Date = newDate;
-                 newFood.MenuID = 1000;
-                 entities.FoodOfaDay.Add(newFood);
-                 entities.SaveChanges();
+                newFood.MenuID = userMenuID;
+                entities.FoodOfaDay.Add(newFood);
+                /*String query = "INSERT INTO dbo.FoodOfaDay (FoodID, Date, MenuID) VALUES (@foodID, @date, @menuID)";
+                SqlCommand command = new SqlCommand(query);
+                command.Parameters.AddWithValue("@userID", userID);
+                command.Parameters.AddWithValue("@date", newDate);
+                command.Parameters.AddWithValue("@menuID", userMenuID);*/
+                entities.SaveChanges();
 
             }
 

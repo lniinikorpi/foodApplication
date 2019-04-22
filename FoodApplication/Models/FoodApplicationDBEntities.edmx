@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="FoodApplicationDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="FoodApplicationDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Allergens">
           <Key>
             <PropertyRef Name="AllergenID" />
@@ -34,7 +34,7 @@
           </Key>
           <Property Name="DayFoodID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="FoodID" Type="int" Nullable="false" />
-          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
           <Property Name="MenuID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Foods">
@@ -44,7 +44,7 @@
           <Property Name="FoodID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="FoodName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="TypeID" Type="int" Nullable="false" />
-          <Property Name="Recepy" Type="nvarchar" MaxLength="50" />
+          <Property Name="Recepy" Type="nvarchar(max)" />
           <Property Name="Picture" Type="image" />
         </EntityType>
         <EntityType Name="FoodTypes">
@@ -218,8 +218,7 @@
             <End Role="WeekMenus" EntitySet="WeekMenus" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="FoodApplicationDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -257,7 +256,7 @@
           </Key>
           <Property Name="DayFoodID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="FoodID" Type="Int32" Nullable="false" />
-          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="MenuID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="WeekMenus" Relationship="Self.FK_FoodOfaDay_Foods" FromRole="FoodOfaDay" ToRole="WeekMenus" />
           <NavigationProperty Name="Foods" Relationship="Self.FK_FoodOfaDay_Foods1" FromRole="FoodOfaDay" ToRole="Foods" />
@@ -269,7 +268,7 @@
           <Property Name="FoodID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="FoodName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="TypeID" Type="Int32" Nullable="false" />
-          <Property Name="Recepy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Recepy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Picture" Type="Binary" MaxLength="Max" FixedLength="false" />
           <NavigationProperty Name="FoodAllergenPairs" Relationship="Self.FK_FoodAllergenPairs_Foods" FromRole="Foods" ToRole="FoodAllergenPairs" />
           <NavigationProperty Name="FoodOfaDay" Relationship="Self.FK_FoodOfaDay_Foods1" FromRole="Foods" ToRole="FoodOfaDay" />

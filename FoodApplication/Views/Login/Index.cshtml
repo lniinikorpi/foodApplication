@@ -1,0 +1,21 @@
+﻿@model FoodApplication.Models.Users
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Login</h2>
+@using (Html.BeginForm("Login", "Login", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+<div class="form-horizontal">
+    <div class="form-group">
+        Username:<br>
+        <input type="text" name="userName" /><br>
+        Password:<br>
+        <input type="password" name="password" /><br>
+        <input type="submit" value="Submit">
+    </div>
+</div>
+}
+

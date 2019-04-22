@@ -1,12 +1,41 @@
-﻿@{
+﻿@model IEnumerable <FoodApplication.Models.FoodOfaDay>
+@{
+    int userID;
+    bool noFoods;
     ViewBag.Title = "Home Page";
-    
+    try
+    {
+        userID = (int)(Session["UserID"]);
+    }
+    catch (Exception)
+    {
+
+        userID = 0;
+    }
+    try
+    {
+        noFoods = (bool)(Session["NoFoods"]);
+    }
+    catch (Exception)
+    {
+
+        noFoods = false;
+    }
+}
+@{FoodApplication.Controllers.LoginController lc = new FoodApplication.Controllers.LoginController();}
+@if (userID == 0)
+{
+    Response.Redirect("http://localhost:58636/Login/Index");
 }
 
+else
+{
     <div class="jumbotron">
         <div>
             @Html.ActionLink("Generate Foods", "CreateFoods", "Home")
         </div>
+        @if (noFoods == false)
+        {
         <table id="contentTable" class="table table-striped">
             <tbody>
                 @foreach (FoodApplication.Models.FoodOfaDay weekFood in Model)
@@ -17,7 +46,7 @@
                                 <div class="card-header">@weekFood.Foods.FoodName</div>
                                 <div class="card-body">
                                     <h4 class="card-title">@weekFood.Date</h4>
-                                    <p class="card-text">@* <a href=@food.Recepy>Resepti</a>*@</p>
+                                    <p class="card-text"> <a href=@weekFood.Foods.Recepy>Resepti</a></p>
                                 </div>
                             </div>
                         </td>
@@ -25,5 +54,11 @@
                 }
             </tbody>
         </table>
+        }
+        else
+        {
+            <p>You have not yet generated foods</p>
+        }
 
     </div>
+}
