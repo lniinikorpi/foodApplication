@@ -22,10 +22,9 @@
         noFoods = false;
     }
 }
-@{FoodApplication.Controllers.LoginController lc = new FoodApplication.Controllers.LoginController();}
 @if (userID == 0)
 {
-    Response.Redirect("http://localhost:58636/Login/Index");
+    Response.Redirect("https://foodapplication.azurewebsites.net/Login/Index");
 }
 
 else
@@ -36,24 +35,24 @@ else
         </div>
         @if (noFoods == false)
         {
-        <table id="contentTable" class="table table-striped">
-            <tbody>
-                @foreach (FoodApplication.Models.FoodOfaDay weekFood in Model)
-                {
-                    <tr>
-                        <td>
-                            <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
-                                <div class="card-header">@weekFood.Foods.FoodName</div>
-                                <div class="card-body">
-                                    <h4 class="card-title">@weekFood.Date</h4>
-                                    <p class="card-text"> <a href=@weekFood.Foods.Recepy>Resepti</a></p>
+            <table id="contentTable" class="table table-striped">
+                <tbody>
+                    @foreach (FoodApplication.Models.FoodOfaDay weekFood in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+                                    <div class="card-header">@weekFood.Foods.FoodName</div>
+                                    <div class="card-body">
+                                        <h4 class="card-title">@weekFood.Date.ToString("dd.MM.yyyy")</h4>
+                                        <p class="card-text"> <a href=@weekFood.Foods.Recepy target="_blank">Resepti</a></p>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         }
         else
         {

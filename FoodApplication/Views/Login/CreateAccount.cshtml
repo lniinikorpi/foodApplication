@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "CreateAccount";
+}
+@{
+    bool creationSuccesful;
+    bool firstTimeVisit = true;
+    try
+    {
+        creationSuccesful = (bool)Session["CreationSuccesful"];
+        firstTimeVisit = false;
+    }
+    catch (Exception)
+    {
+        creationSuccesful = false;
+    }
+ }
+
+<h2>CreateAccount</h2>
+@{ 
+    if (creationSuccesful == false && firstTimeVisit == false)
+    {
+        <script>
+            alert("Something went wrong creating account");
+        </script>
+    }
+}
+@using (Html.BeginForm("AccountCreated", "Login", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <div class="form-group">
+            Username:<br>
+            <input type="text" name="userName" /><br>
+            Password:<br>
+            <input type="password" name="password" /><br>
+            <input type="submit" value="Create Account">
+        </div>
+    </div>
+}
+

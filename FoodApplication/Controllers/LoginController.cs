@@ -11,6 +11,7 @@ namespace FoodApplication.Controllers
     {
         FoodApplicationDBEntities entities = new FoodApplicationDBEntities();
         public int userID;
+        public bool creationSuccesful;
 
         // GET: Login
         public ActionResult Index()
@@ -33,12 +34,38 @@ namespace FoodApplication.Controllers
                     //break;
                 }
             }
-            return View();
+            return RedirectToAction("Index");
         }
 
         public ActionResult LoginSuccesful()
         {
             return View();
+        }
+
+        public ActionResult CreateAccount()
+        {
+            return View();
+        }
+        public ActionResult AccountCreated(string userName, string password)
+        {
+            try
+            {
+                List<Users> users = entities.Users.ToList();
+                Users newUser = new Users();
+                newUser.UserName = userName;
+                newUser.Password = password;
+                entities.Users.Add(newUser);
+                entities.SaveChanges();
+                creationSuccesful = true;
+                Session["CreationSuccesful"] = creationSuccesful;
+                return RedirectToAction("Index");
+            }
+            catch (Exception)
+            {
+                creationSuccesful = false;
+                Session["CreationSuccesful"] = creationSuccesful;
+                return RedirectToAction("CreateAccount");
+            }
         }
     }
 }

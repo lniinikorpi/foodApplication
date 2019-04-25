@@ -91,8 +91,8 @@ namespace FoodApplication.Controllers
                 newWeekMenu.UserID = userID;
                 entities.WeekMenus.Add(newWeekMenu);
                 entities.SaveChanges();
-                SqlCommand comm = new SqlCommand();
-                foreach (WeekMenus wm in weekMenus)
+                List<WeekMenus> updatedWeekMenus = entities.WeekMenus.ToList();
+                foreach (WeekMenus wm in updatedWeekMenus)
                 {
                     if (wm.UserID == userID)
                     {
@@ -188,7 +188,7 @@ namespace FoodApplication.Controllers
                             orderby wf.Date
                             select wf;
 
-            return View(weekFoods);
+            return RedirectToAction("Index");
         }
 
         public ActionResult About()
