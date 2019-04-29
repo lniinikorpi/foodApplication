@@ -28,6 +28,7 @@ namespace FoodApplication.Controllers
             }
             List<WeekMenus> weekMenus = entities.WeekMenus.ToList();
             List<FoodOfaDay> foodOfaDays = entities.FoodOfaDay.ToList();
+            List<Foods> foods = entities.Foods.ToList();
             int userMenuID = new int();
             foreach (WeekMenus wm in weekMenus)
             {
@@ -39,7 +40,6 @@ namespace FoodApplication.Controllers
             }
             var weekFoods = (from wf in foodOfaDays
                             where wf.MenuID == userMenuID
-                            orderby wf.Date
                             select wf).ToList();
             if (weekFoods.Count > 0)
             {
@@ -182,11 +182,6 @@ namespace FoodApplication.Controllers
                  entities.SaveChanges();
 
             }
-
-            var weekFoods = from wf in foodOfaDays
-                            where wf.MenuID == userMenuID
-                            orderby wf.Date
-                            select wf;
 
             return RedirectToAction("Index");
         }

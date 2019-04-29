@@ -2,6 +2,7 @@
 @{
     int userID;
     bool noFoods;
+    List<FoodApplication.Models.FoodOfaDay> fod = new List<FoodApplication.Models.FoodOfaDay>();
     ViewBag.Title = "Home Page";
     try
     {
@@ -18,13 +19,12 @@
     }
     catch (Exception)
     {
-
         noFoods = false;
     }
 }
 @if (userID == 0)
 {
-    Response.Redirect("https://foodapplication.azurewebsites.net/Login/Index");
+    Response.Redirect("http://localhost:58636/Login/Index");
 }
 
 else
@@ -35,22 +35,77 @@ else
         </div>
         @if (noFoods == false)
         {
+            foreach (FoodApplication.Models.FoodOfaDay weekFood in Model)
+            {
+                fod.Add(weekFood);
+            }
             <table id="contentTable" class="table table-striped">
                 <tbody>
-                    @foreach (FoodApplication.Models.FoodOfaDay weekFood in Model)
-                    {
-                        <tr>
+                    <tr>
+                        @for (int i = 0; i < 7; i++)
+                        {
+                        <th>
+                            @fod[i].Date.DayOfWeek.ToString() @fod[i].Date.ToString("dd.MM")
+                        </th>
+                        }
+                    </tr>
+                    <tr>
+                        @for (int i = 0; i < 7; i++)
+                        {
                             <td>
-                                <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
-                                    <div class="card-header">@weekFood.Foods.FoodName</div>
+                                <div class="card text-white bg-info mb-3" style="max-width: 20rem;">
+                                    <div class="card-header">@fod[i].Foods.FoodName</div>
                                     <div class="card-body">
-                                        <h4 class="card-title">@weekFood.Date.ToString("dd.MM.yyyy")</h4>
-                                        <p class="card-text"> <a href=@weekFood.Foods.Recepy target="_blank">Resepti</a></p>
+                                        <h4 class="card-title"></h4>
+                                        <p class="card-text"> <a href=@fod[i].Foods.Recepy target="_blank">Resepti</a></p>
                                     </div>
                                 </div>
                             </td>
-                        </tr>
-                    }
+                        }
+                    </tr>
+                    <tr>
+                        @for (int i = 7; i < 14; i++)
+                        {
+                            <td>
+                                <div class="card text-white bg-info mb-3" style="max-width: 20rem;">
+                                    <div class="card-header">@fod[i].Foods.FoodName</div>
+                                    <div class="card-body">
+                                        <h4 class="card-title"></h4>
+                                        <p class="card-text"> <a href=@fod[i].Foods.Recepy target="_blank">Resepti</a></p>
+                                    </div>
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                    <tr>
+                        @for (int i = 14; i < 21; i++)
+                        {
+                            <td>
+                                <div class="card text-white bg-info mb-3" style="max-width: 20rem;">
+                                    <div class="card-header">@fod[i].Foods.FoodName</div>
+                                    <div class="card-body">
+                                        <h4 class="card-title"></h4>
+                                        <p class="card-text"> <a href=@fod[i].Foods.Recepy target="_blank">Resepti</a></p>
+                                    </div>
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                    <tr>
+                        @for (int i = 21; i < 28; i++)
+                        {
+                            <td>
+                                <div class="card text-white bg-info mb-3" style="max-width: 20rem;">
+                                    <div class="card-header">@fod[i].Foods.FoodName</div>
+                                    <div class="card-body">
+                                        <h4 class="card-title"></h4>
+                                        <p class="card-text"> <a href=@fod[i].Foods.Recepy target="_blank">Resepti</a></p>
+                                    </div>
+                                </div>
+                            </td>
+                        }
+                    </tr>
+
                 </tbody>
             </table>
         }
